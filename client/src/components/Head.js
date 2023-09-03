@@ -1,3 +1,4 @@
+
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -7,6 +8,7 @@ import { YOUTUBE_SEARCH_API } from "../utils/contants";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions,setSuggestions] = useState([]);
   useEffect(() => {
     const timer=setTimeout(()=>getSearchSuggestions(),200);
     return()=>{
@@ -15,10 +17,16 @@ const Head = () => {
   }, [searchQuery]);
 
   const getSearchSuggestions = async () => {
-    const data = await fetch(`${YOUTUBE_SEARCH_API}${searchQuery}`, { mode: 'no-cors' });
-    const json = await data.json;
-    console.log(json)
-    console.log(YOUTUBE_SEARCH_API + searchQuery + ", { mode: 'no-cors' }")
+    try {
+      const response = await fetch(`${YOUTUBE_SEARCH_API}${searchQuery}`, { mode: 'no-cors' });
+      console.log(response);
+      const json = await response.json();
+      console.log(json); // Log the entire json object
+      console.log(json[1]); // Log the specific part you're trying to access
+      setSuggestions(json[1]);
+    } catch (error) {
+      console.error('Error fetching search suggestions:', error);
+    }
   };
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
@@ -41,17 +49,31 @@ const Head = () => {
           />
         </a>
       </div>
-      <div className="col-span-10 px-20 flex items-center ">
+      <div className="col-span-10 px-20 flex items-center   ">
+        <div className="w-full flex items-center">
         <input
-          className="border-gray-400 border w-1/2 px-5  py-1px rounded-l-full"
+          className="border-gray-400 border px-5 w-3/5  px rounded-l-full"
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button className="border-gray-400 border px-5 h-4/5 py-1px rounded-r-full bg-gray-200">
+        <button className="border-gray-400 border px-5 h-4/5 py-1 px rounded-r-full bg-gray-200">
           <FaSearch />
         </button>
       </div>
+      <div className=" mt-[6rem] fixed bg-white py-2 px-5 w-5/12 shadow-lg rounded-lg ">
+        <ul>
+          {suggestions?.map((s)=>(
+          <li key={s} className="px-5 py-1 shadow-md hover:bg-gray-100">{s}</li>
+          
+          ))}
+          
+        </ul>
+        
+      </div>
+   
+      </div>
+      
       <div className="col-span-1">
         <img
           className="h-8"
