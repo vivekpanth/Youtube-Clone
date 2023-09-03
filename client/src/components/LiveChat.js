@@ -50,7 +50,7 @@ const LiveChat = () => {
       >
         {/* <img
           className="h-8 ml-4"
-          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png "
           alt="user-logo"
         /> */}
         <FcBusinessman className="h-8 text-3xl rounded-full border border-red-900 ml-4" />
